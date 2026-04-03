@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mecka — Shipment Calendar</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
 <style>
   :root {
     --bg: #0f1117;
@@ -28,7 +28,7 @@
   * { margin:0; padding:0; box-sizing:border-box; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -51,7 +51,7 @@
   }
 
   .logo {
-    font-family: 'Syne', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 800;
     font-size: 18px;
     letter-spacing: 0.04em;
@@ -64,7 +64,7 @@
     font-weight: 400;
     color: var(--muted);
     font-size: 13px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
   }
 
   .header-controls {
@@ -88,7 +88,7 @@
   .nav-btn:hover { background: var(--border); border-color: var(--accent); }
 
   .month-label {
-    font-family: 'Syne', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 700;
     font-size: 16px;
     min-width: 160px;
@@ -102,7 +102,7 @@
     padding: 8px 18px;
     border-radius: 8px;
     cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 500;
     font-size: 13px;
     display: flex; align-items: center; gap: 6px;
@@ -123,7 +123,7 @@
   .legend-item {
     display: flex; align-items: center; gap: 6px;
     font-size: 12px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     color: var(--muted);
   }
   .legend-dot {
@@ -142,7 +142,7 @@
   }
   .day-header {
     text-align: center;
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     font-size: 11px;
     font-weight: 500;
     color: var(--muted);
@@ -185,7 +185,7 @@
   }
 
   .day-num {
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     font-size: 12px;
     font-weight: 500;
     color: var(--muted);
@@ -198,7 +198,7 @@
     border-radius: 5px;
     padding: 3px 7px;
     font-size: 11px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
@@ -220,7 +220,7 @@
   .more-events {
     font-size: 10px;
     color: var(--muted);
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     padding: 2px 4px;
     cursor: pointer;
   }
@@ -254,7 +254,7 @@
   }
 
   .modal-title {
-    font-family: 'Syne', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 700;
     font-size: 17px;
     margin-bottom: 20px;
@@ -278,7 +278,7 @@
   .form-label {
     display: block;
     font-size: 12px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     color: var(--muted);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -291,7 +291,7 @@
     color: var(--text);
     border-radius: 8px;
     padding: 10px 12px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
     outline: none;
     transition: border-color 0.15s;
@@ -317,7 +317,7 @@
     padding: 9px 18px;
     border-radius: 8px;
     cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 13px;
     transition: color 0.15s;
   }
@@ -329,7 +329,7 @@
     padding: 9px 22px;
     border-radius: 8px;
     cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-weight: 500;
     font-size: 13px;
     transition: opacity 0.15s;
@@ -342,7 +342,7 @@
     padding: 9px 16px;
     border-radius: 8px;
     cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 13px;
     margin-right: auto;
     transition: opacity 0.15s;
@@ -359,7 +359,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     font-size: 12px;
     padding: 4px 10px;
     border-radius: 20px;
@@ -373,7 +373,7 @@
   }
   .detail-key {
     color: var(--muted);
-    font-family: 'DM Mono', monospace;
+    font-family: 'SF Mono', 'Courier New', monospace;
     font-size: 12px;
     min-width: 80px;
     padding-top: 1px;
@@ -740,7 +740,7 @@ function openDetail(id) {
       <div class="detail-tag" style="background:${bgMap[ev.category]};color:${colorMap[ev.category]}">
         ${CAT_ICONS[ev.category]} ${CATEGORY_LABELS[ev.category]}
       </div>
-      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;margin:4px 0 12px">${ev.title}</div>
+      <div style="font-family:sans-serif;font-weight:700;font-size:20px;margin:4px 0 12px">${ev.title}</div>
       <div class="detail-row"><div class="detail-key">Date</div><div class="detail-val">${dateLabel}</div></div>
       ${ev.hub ? `<div class="detail-row"><div class="detail-key">Hub</div><div class="detail-val">${ev.hub}</div></div>` : ''}
       ${ev.qty ? `<div class="detail-row"><div class="detail-key">Qty</div><div class="detail-val">${ev.qty}</div></div>` : ''}
