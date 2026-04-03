@@ -3,442 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mecka — Shipment Calendar</title>
-
+<title>Mecka Shipments</title>
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #181c27;
-    --surface2: #1e2335;
-    --border: #2a2f45;
-    --text: #e8eaf2;
-    --muted: #6b7194;
-    --accent: #4f6ef7;
-
-    --production:  #f97316;
-    --production-bg: rgba(249,115,22,0.12);
-    --shipment:    #22d3a5;
-    --shipment-bg: rgba(34,211,165,0.12);
-    --purchasing:  #a78bfa;
-    --purchasing-bg: rgba(167,139,250,0.12);
-    --atrisk:      #f43f5e;
-    --atrisk-bg:   rgba(244,63,94,0.12);
-  }
-
-  * { margin:0; padding:0; box-sizing:border-box; }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0;
-  }
-
-  /* ── Header ── */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .logo {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    letter-spacing: 0.04em;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo span {
-    font-weight: 400;
-    color: var(--muted);
-    font-size: 13px;
-    font-family: 'SF Mono', 'Courier New', monospace;
-  }
-
-  .header-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .nav-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    width: 34px; height: 34px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s, border-color 0.15s;
-  }
-  .nav-btn:hover { background: var(--border); border-color: var(--accent); }
-
-  .month-label {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    min-width: 160px;
-    text-align: center;
-  }
-
-  .add-btn {
-    background: var(--accent);
-    border: none;
-    color: #fff;
-    padding: 8px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 500;
-    font-size: 13px;
-    display: flex; align-items: center; gap: 6px;
-    transition: opacity 0.15s, transform 0.1s;
-  }
-  .add-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-  .add-btn:active { transform: translateY(0); }
-
-  /* ── Legend ── */
-  .legend {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding: 10px 24px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-  }
-  .legend-item {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px;
-    font-family: 'SF Mono', 'Courier New', monospace;
-    color: var(--muted);
-  }
-  .legend-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-  }
-
-  /* ── Calendar Grid ── */
-  .calendar-wrap { padding: 20px 24px; }
-
-  .day-headers {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin-bottom: 4px;
-  }
-  .day-header {
-    text-align: center;
-    font-family: 'SF Mono', 'Courier New', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--muted);
-    padding: 6px 0;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-  }
-
-  .day-cell {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    min-height: 110px;
-    padding: 8px 8px 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    transition: border-color 0.15s;
-    cursor: pointer;
-    position: relative;
-  }
-  .day-cell:hover { border-color: var(--accent); }
-  .day-cell.other-month { opacity: 0.3; pointer-events: none; }
-  .day-cell.today {
-    border-color: var(--accent);
-    background: rgba(79,110,247,0.06);
-  }
-  .day-cell.today .day-num {
-    background: var(--accent);
-    color: #fff;
-    border-radius: 50%;
-    width: 24px; height: 24px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .day-num {
-    font-family: 'SF Mono', 'Courier New', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--muted);
-    margin-bottom: 2px;
-    width: 24px; height: 24px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .event-chip {
-    border-radius: 5px;
-    padding: 3px 7px;
-    font-size: 11px;
-    font-family: 'SF Mono', 'Courier New', monospace;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: opacity 0.15s, transform 0.1s;
-    line-height: 1.4;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .event-chip:hover { opacity: 0.8; transform: translateX(1px); }
-
-  .event-chip.production  { background: var(--production-bg);  color: var(--production);  border-left: 2px solid var(--production); }
-  .event-chip.shipment    { background: var(--shipment-bg);    color: var(--shipment);    border-left: 2px solid var(--shipment); }
-  .event-chip.purchasing  { background: var(--purchasing-bg);  color: var(--purchasing);  border-left: 2px solid var(--purchasing); }
-  .event-chip.atrisk      { background: var(--atrisk-bg);      color: var(--atrisk);      border-left: 2px solid var(--atrisk); }
-
-  .more-events {
-    font-size: 10px;
-    color: var(--muted);
-    font-family: 'SF Mono', 'Courier New', monospace;
-    padding: 2px 4px;
-    cursor: pointer;
-  }
-  .more-events:hover { color: var(--accent); }
-
-  /* ── Modal ── */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    width: 100%;
-    max-width: 460px;
-    position: relative;
-    animation: modalIn 0.18s ease;
-  }
-  @keyframes modalIn {
-    from { opacity:0; transform: translateY(12px) scale(0.97); }
-    to   { opacity:1; transform: none; }
-  }
-
-  .modal-title {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 700;
-    font-size: 17px;
-    margin-bottom: 20px;
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 16px; right: 16px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    width: 30px; height: 30px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .modal-close:hover { color: var(--text); }
-
-  .form-group { margin-bottom: 16px; }
-  .form-label {
-    display: block;
-    font-size: 12px;
-    font-family: 'SF Mono', 'Courier New', monospace;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 7px;
-  }
-  .form-input, .form-select, .form-textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .form-input:focus, .form-select:focus, .form-textarea:focus {
-    border-color: var(--accent);
-  }
-  .form-select option { background: var(--surface2); }
-  .form-textarea { resize: vertical; min-height: 70px; }
-
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 22px;
-  }
-  .btn-cancel {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 9px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 13px;
-    transition: color 0.15s;
-  }
-  .btn-cancel:hover { color: var(--text); }
-  .btn-save {
-    background: var(--accent);
-    border: none;
-    color: #fff;
-    padding: 9px 22px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 500;
-    font-size: 13px;
-    transition: opacity 0.15s;
-  }
-  .btn-save:hover { opacity: 0.85; }
-  .btn-delete {
-    background: var(--atrisk-bg);
-    border: 1px solid var(--atrisk);
-    color: var(--atrisk);
-    padding: 9px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 13px;
-    margin-right: auto;
-    transition: opacity 0.15s;
-  }
-  .btn-delete:hover { opacity: 0.8; }
-
-  /* ── Event detail modal ── */
-  .event-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .detail-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'SF Mono', 'Courier New', monospace;
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    width: fit-content;
-    margin-bottom: 4px;
-  }
-  .detail-row {
-    display: flex;
-    gap: 8px;
-    font-size: 13px;
-  }
-  .detail-key {
-    color: var(--muted);
-    font-family: 'SF Mono', 'Courier New', monospace;
-    font-size: 12px;
-    min-width: 80px;
-    padding-top: 1px;
-  }
-  .detail-val { color: var(--text); }
-
-  /* ── Mobile ── */
-  @media (max-width: 640px) {
-    .calendar-wrap { padding: 12px; }
-    .day-cell { min-height: 70px; padding: 5px; }
-    .day-num { font-size: 10px; }
-    .event-chip { font-size: 9px; padding: 2px 5px; }
-    header { padding: 12px 14px; }
-    .legend { padding: 8px 14px; gap: 10px; }
-    .month-label { font-size: 13px; min-width: 120px; }
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f1117;color:#e8eaf2;font-family:system-ui,sans-serif;min-height:100vh}
+header{background:#181c27;border-bottom:1px solid #2a2f45;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:50}
+.logo{font-weight:800;font-size:17px;letter-spacing:.05em}
+.logo small{font-weight:400;color:#6b7194;font-size:12px;margin-left:8px}
+.hc{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button{cursor:pointer;font-family:inherit}
+.nbtn{background:#1e2335;border:1px solid #2a2f45;color:#e8eaf2;width:32px;height:32px;border-radius:7px;font-size:18px;display:flex;align-items:center;justify-content:center}
+.nbtn:hover{border-color:#4f6ef7}
+#monthLabel{font-weight:700;font-size:15px;min-width:150px;text-align:center}
+.abtn{background:#4f6ef7;border:none;color:#fff;padding:7px 16px;border-radius:7px;font-weight:600;font-size:13px}
+.abtn:hover{opacity:.85}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 20px;background:#181c27;border-bottom:1px solid #2a2f45}
+.li{display:flex;align-items:center;gap:5px;font-size:12px;color:#6b7194}
+.ld{width:9px;height:9px;border-radius:50%}
+.wrap{padding:16px 20px}
+.dh{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
+.dh div{text-align:center;font-size:11px;color:#6b7194;padding:5px 0;text-transform:uppercase;letter-spacing:.06em}
+#grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.dc{background:#181c27;border:1px solid #2a2f45;border-radius:9px;min-height:105px;padding:7px 7px 5px;display:flex;flex-direction:column;gap:2px;cursor:pointer}
+.dc:hover{border-color:#4f6ef7}
+.dc.om{opacity:.25;pointer-events:none}
+.dc.td{border-color:#4f6ef7;background:rgba(79,110,247,.06)}
+.dn{font-size:11px;color:#6b7194;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin-bottom:1px}
+.dc.td .dn{background:#4f6ef7;color:#fff;border-radius:50%}
+.chip{border-radius:4px;padding:2px 6px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid}
+.chip:hover{opacity:.75}
+.chip.production{background:rgba(249,115,22,.13);color:#f97316;border-color:#f97316}
+.chip.shipment{background:rgba(34,211,165,.13);color:#22d3a5;border-color:#22d3a5}
+.chip.purchasing{background:rgba(167,139,250,.13);color:#a78bfa;border-color:#a78bfa}
+.chip.atrisk{background:rgba(244,63,94,.13);color:#f43f5e;border-color:#f43f5e}
+.more{font-size:10px;color:#6b7194;padding:1px 3px}
+.more:hover{color:#4f6ef7}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:center;justify-content:center;padding:16px}
+.ov.open{display:flex}
+.modal{background:#181c27;border:1px solid #2a2f45;border-radius:14px;padding:24px;width:100%;max-width:440px;position:relative}
+.modal h2{font-size:16px;font-weight:700;margin-bottom:18px}
+.mcl{position:absolute;top:14px;right:14px;background:#1e2335;border:1px solid #2a2f45;color:#6b7194;width:28px;height:28px;border-radius:7px;font-size:15px;display:flex;align-items:center;justify-content:center}
+.mcl:hover{color:#e8eaf2}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:11px;color:#6b7194;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+input,select,textarea{width:100%;background:#0f1117;border:1px solid #2a2f45;color:#e8eaf2;border-radius:7px;padding:9px 11px;font-family:inherit;font-size:13px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#4f6ef7}
+select option{background:#1e2335}
+textarea{resize:vertical;min-height:65px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ma{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;align-items:center}
+.bcn{background:#1e2335;border:1px solid #2a2f45;color:#6b7194;padding:8px 16px;border-radius:7px;font-size:13px}
+.bcn:hover{color:#e8eaf2}
+.bsv{background:#4f6ef7;border:none;color:#fff;padding:8px 20px;border-radius:7px;font-weight:600;font-size:13px}
+.bsv:hover{opacity:.85}
+.bdl{background:rgba(244,63,94,.13);border:1px solid #f43f5e;color:#f43f5e;padding:8px 14px;border-radius:7px;font-size:13px;margin-right:auto}
+.bdl:hover{opacity:.8}
+.dd{display:flex;flex-direction:column;gap:9px}
+.dtag{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 9px;border-radius:20px}
+.drow{display:flex;gap:7px;font-size:13px}
+.dkey{color:#6b7194;font-size:11px;min-width:75px;padding-top:1px}
+.dtitle{font-weight:700;font-size:19px;margin:4px 0 10px}
+/* Day view modal */
+.daymodal{background:#181c27;border:1px solid #2a2f45;border-radius:14px;padding:24px;width:100%;max-width:500px;position:relative;max-height:80vh;display:flex;flex-direction:column}
+.daymodal h2{font-size:15px;font-weight:700;margin-bottom:4px}
+.daymodal .dsub{font-size:11px;color:#6b7194;margin-bottom:16px}
+.dev-list{overflow-y:auto;display:flex;flex-direction:column;gap:8px;flex:1}
+.dev-item{background:#0f1117;border:1px solid #2a2f45;border-radius:9px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer;transition:border-color .15s}
+.dev-item:hover{border-color:#4f6ef7}
+.dev-left{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.dev-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dev-meta{display:flex;gap:8px;flex-wrap:wrap}
+.dev-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.dev-hub{font-size:10px;color:#6b7194}
+.dev-notes{font-size:11px;color:#6b7194;margin-top:3px}
+.dev-arrow{color:#6b7194;font-size:14px;padding-top:2px}
+.day-add-btn{margin-top:14px;background:#4f6ef7;border:none;color:#fff;padding:8px 16px;border-radius:7px;font-weight:600;font-size:13px;width:100%}
+.day-add-btn:hover{opacity:.85}
+@media(max-width:600px){
+  .wrap{padding:10px}
+  .dc{min-height:65px;padding:4px}
+  .chip{font-size:9px;padding:1px 4px}
+  .fr{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    MECKA <span>// shipment calendar</span>
-  </div>
-  <div class="header-controls">
-    <button class="nav-btn" onclick="changeMonth(-1)">&#8249;</button>
-    <div class="month-label" id="monthLabel"></div>
-    <button class="nav-btn" onclick="changeMonth(1)">&#8250;</button>
-    <button class="add-btn" onclick="openAddModal()">+ Add Event</button>
+  <div class="logo">MECKA <small>// shipment calendar</small></div>
+  <div class="hc">
+    <button class="nbtn" onclick="changeMonth(-1)">&#8249;</button>
+    <div id="monthLabel"></div>
+    <button class="nbtn" onclick="changeMonth(1)">&#8250;</button>
+    <button class="abtn" onclick="openAdd()">+ Add Event</button>
   </div>
 </header>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:var(--production)"></div>Production</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--shipment)"></div>Shipment / Arrival</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--purchasing)"></div>Purchasing / PO</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--atrisk)"></div>At Risk / Delayed</div>
+  <div class="li"><div class="ld" style="background:#f97316"></div>Production</div>
+  <div class="li"><div class="ld" style="background:#22d3a5"></div>Shipment / Arrival</div>
+  <div class="li"><div class="ld" style="background:#a78bfa"></div>Purchasing / PO</div>
+  <div class="li"><div class="ld" style="background:#f43f5e"></div>At Risk / Delayed</div>
 </div>
 
-<div class="calendar-wrap">
-  <div class="day-headers">
-    <div class="day-header">Sun</div>
-    <div class="day-header">Mon</div>
-    <div class="day-header">Tue</div>
-    <div class="day-header">Wed</div>
-    <div class="day-header">Thu</div>
-    <div class="day-header">Fri</div>
-    <div class="day-header">Sat</div>
+<div class="wrap">
+  <div class="dh">
+    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+    <div>Thu</div><div>Fri</div><div>Sat</div>
   </div>
-  <div class="calendar-grid" id="calendarGrid"></div>
+  <div id="grid"></div>
 </div>
 
-<!-- Add / Edit Modal -->
-<div class="modal-overlay" id="eventModal">
+
+<!-- Day View Modal -->
+<div class="ov" id="dayModal">
+  <div class="daymodal">
+    <button class="mcl" onclick="closeDayView()">&#10005;</button>
+    <h2 id="dayTitle"></h2>
+    <div class="dsub" id="daySubtitle"></div>
+    <div class="dev-list" id="dayList"></div>
+    <button class="day-add-btn" id="dayAddBtn">+ Add Event on This Day</button>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="ov" id="eModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title" id="modalTitle">Add Shipment Event</div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Date</label>
-        <input type="date" class="form-input" id="eventDate">
+    <button class="mcl" onclick="closeModal()">&#10005;</button>
+    <h2 id="eTitle">Add Event</h2>
+    <div class="fr">
+      <div class="fg">
+        <label class="fl">Date</label>
+        <input type="date" id="eDate">
       </div>
-      <div class="form-group">
-        <label class="form-label">Category</label>
-        <select class="form-select" id="eventCategory">
+      <div class="fg">
+        <label class="fl">Category</label>
+        <select id="eCat">
           <option value="shipment">Shipment / Arrival</option>
           <option value="production">Production</option>
           <option value="purchasing">Purchasing / PO</option>
@@ -446,15 +146,15 @@
         </select>
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Title (short — shows on calendar)</label>
-      <input type="text" class="form-input" id="eventTitle" placeholder="e.g. 100 MC JKT">
+    <div class="fg">
+      <label class="fl">Title (shows on calendar)</label>
+      <input type="text" id="eLabel" placeholder="e.g. 100 MC JKT">
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Hub</label>
-        <select class="form-select" id="eventHub">
-          <option value="">— All Hubs —</option>
+    <div class="fr">
+      <div class="fg">
+        <label class="fl">Hub</label>
+        <select id="eHub">
+          <option value="">All Hubs</option>
           <option value="MNL">Manila (MNL)</option>
           <option value="JKT">Jakarta (JKT)</option>
           <option value="BALI">Bali (BALI)</option>
@@ -462,322 +162,248 @@
           <option value="CN">China (CN)</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Quantity</label>
-        <input type="text" class="form-input" id="eventQty" placeholder="e.g. 400 units">
+      <div class="fg">
+        <label class="fl">Quantity</label>
+        <input type="text" id="eQty" placeholder="e.g. 400 units">
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Notes</label>
-      <textarea class="form-textarea" id="eventNotes" placeholder="Forwarder, AWB, PO ref, etc."></textarea>
+    <div class="fg">
+      <label class="fl">Notes</label>
+      <textarea id="eNotes" placeholder="Forwarder, AWB, PO ref..."></textarea>
     </div>
-    <div class="modal-actions">
-      <button class="btn-delete" id="deleteBtn" style="display:none" onclick="deleteEvent()">Delete</button>
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveEvent()">Save Event</button>
+    <div class="ma">
+      <button class="bdl" id="eDel" style="display:none" onclick="doDelete()">Delete</button>
+      <button class="bcn" onclick="closeModal()">Cancel</button>
+      <button class="bsv" onclick="doSave()">Save</button>
     </div>
   </div>
 </div>
 
-<!-- Event Detail Modal -->
-<div class="modal-overlay" id="detailModal">
+<!-- Detail Modal -->
+<div class="ov" id="dModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeDetail()">✕</button>
-    <div id="detailContent"></div>
-    <div class="modal-actions">
-      <button class="btn-delete" onclick="deleteFromDetail()">Delete</button>
-      <button class="btn-cancel" onclick="closeDetail()">Close</button>
-      <button class="btn-save" onclick="editFromDetail()">Edit</button>
+    <button class="mcl" onclick="closeDetail()">&#10005;</button>
+    <div id="dContent"></div>
+    <div class="ma">
+      <button class="bdl" onclick="detailDelete()">Delete</button>
+      <button class="bcn" onclick="closeDetail()">Close</button>
+      <button class="bsv" onclick="detailEdit()">Edit</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── State ───────────────────────────────────────────────────────────────────
-let currentYear, currentMonth;
-let events = [];
-let editingId = null;
-let detailEventId = null;
+var Y, M, events=[], editId=null, detailId=null;
+var CATS={production:'Production',shipment:'Shipment / Arrival',purchasing:'Purchasing / PO',atrisk:'At Risk / Delayed'};
+var ICONS={production:'&#9881;',shipment:'&#128230;',purchasing:'&#129534;',atrisk:'&#9888;'};
+var COLORS={production:'#f97316',shipment:'#22d3a5',purchasing:'#a78bfa',atrisk:'#f43f5e'};
+var BGS={production:'rgba(249,115,22,.13)',shipment:'rgba(34,211,165,.13)',purchasing:'rgba(167,139,250,.13)',atrisk:'rgba(244,63,94,.13)'};
 
-const CATEGORY_LABELS = {
-  production: 'Production',
-  shipment:   'Shipment / Arrival',
-  purchasing: 'Purchasing / PO',
-  atrisk:     'At Risk / Delayed',
-};
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function p2(n){return String(n).padStart(2,'0')}
 
-const CAT_ICONS = {
-  production: '⚙',
-  shipment:   '📦',
-  purchasing: '🧾',
-  atrisk:     '⚠',
-};
-
-// ── Persistence ─────────────────────────────────────────────────────────────
-function save() {
-  try { localStorage.setItem('mecka_events', JSON.stringify(events)); } catch(e) {}
-}
-function load() {
-  try {
-    const d = localStorage.getItem('mecka_events');
-    if (d) events = JSON.parse(d);
-  } catch(e) { events = []; }
-  if (!events.length) seedDefaults();
+function saveData(){try{localStorage.setItem('mck2',JSON.stringify(events))}catch(e){}}
+function loadData(){
+  try{var d=localStorage.getItem('mck2');if(d){events=JSON.parse(d);return}}catch(e){}
+  seed();
 }
 
-function seedDefaults() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth() + 1;
-  const pad = n => String(n).padStart(2,'0');
-  const d = (day) => `${y}-${pad(m)}-${pad(day)}`;
-
-  events = [
-    { id: uid(), date: d(1),  category: 'shipment',   title: '100 MC JKT',        hub: 'JKT',  qty: '100 units', notes: 'First Jakarta batch.' },
-    { id: uid(), date: d(1),  category: 'shipment',   title: '1000 SD PH',        hub: 'MNL',  qty: '1000 units', notes: '' },
-    { id: uid(), date: d(2),  category: 'shipment',   title: '300 SD 256 JKT',    hub: 'JKT',  qty: '300 units', notes: '' },
-    { id: uid(), date: d(5),  category: 'production', title: '1000 Gohan',         hub: '',     qty: '1000 units', notes: 'Batch ready from Brian.' },
-    { id: uid(), date: d(6),  category: 'shipment',   title: '100 MC JKT',        hub: 'JKT',  qty: '100 units', notes: '' },
-    { id: uid(), date: d(6),  category: 'shipment',   title: '100 MC MNL',        hub: 'MNL',  qty: '100 units', notes: '' },
-    { id: uid(), date: d(7),  category: 'purchasing', title: '1000 CM5',           hub: '',     qty: '1000 units', notes: 'PO with Julia / Armita.' },
-    { id: uid(), date: d(10), category: 'shipment',   title: '100 MC JKT',        hub: 'JKT',  qty: '100 units', notes: '' },
-    { id: uid(), date: d(10), category: 'shipment',   title: '100 MC MNL',        hub: 'MNL',  qty: '100 units', notes: '' },
-    { id: uid(), date: d(13), category: 'atrisk',     title: '100 WC to ?',       hub: '',     qty: '100 sets',  notes: 'Wrist-cam destination TBD. QC backlog.' },
-    { id: uid(), date: d(19), category: 'production', title: '1000 Naruto',        hub: '',     qty: '1000 units', notes: 'Naruto batch ready.' },
+function seed(){
+  var now=new Date(),y=now.getFullYear(),m=now.getMonth()+1;
+  function dt(d){return y+'-'+p2(m)+'-'+p2(d)}
+  events=[
+    {id:uid(),date:dt(1),category:'shipment',title:'100 MC JKT',hub:'JKT',qty:'100 units',notes:'First Jakarta batch.'},
+    {id:uid(),date:dt(1),category:'shipment',title:'1000 SD PH',hub:'MNL',qty:'1000 units',notes:''},
+    {id:uid(),date:dt(2),category:'shipment',title:'300 SD JKT',hub:'JKT',qty:'300 units',notes:''},
+    {id:uid(),date:dt(5),category:'production',title:'1000 Gohan',hub:'',qty:'1000 units',notes:'Batch ready from Brian.'},
+    {id:uid(),date:dt(6),category:'shipment',title:'100 MC JKT',hub:'JKT',qty:'100 units',notes:''},
+    {id:uid(),date:dt(6),category:'shipment',title:'100 MC MNL',hub:'MNL',qty:'100 units',notes:''},
+    {id:uid(),date:dt(7),category:'purchasing',title:'1000 CM5',hub:'',qty:'1000 units',notes:'PO with Julia / Armita.'},
+    {id:uid(),date:dt(10),category:'shipment',title:'100 MC JKT',hub:'JKT',qty:'100 units',notes:''},
+    {id:uid(),date:dt(10),category:'shipment',title:'100 MC MNL',hub:'MNL',qty:'100 units',notes:''},
+    {id:uid(),date:dt(13),category:'atrisk',title:'100 WC to ?',hub:'',qty:'100 sets',notes:'Wrist-cam destination TBD. QC backlog.'},
+    {id:uid(),date:dt(19),category:'production',title:'1000 Naruto',hub:'',qty:'1000 units',notes:'Naruto batch ready.'}
   ];
-  save();
+  saveData();
 }
 
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function init(){
+  var now=new Date();Y=now.getFullYear();M=now.getMonth();
+  loadData();render();
+}
 
-// ── Calendar render ──────────────────────────────────────────────────────────
-function init() {
-  const now = new Date();
-  currentYear = now.getFullYear();
-  currentMonth = now.getMonth();
-  load();
+function changeMonth(d){
+  M+=d;
+  if(M>11){M=0;Y++}
+  if(M<0){M=11;Y--}
   render();
 }
 
-function changeMonth(dir) {
-  currentMonth += dir;
-  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-  if (currentMonth < 0)  { currentMonth = 11; currentYear--; }
-  render();
+function render(){
+  var names=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('monthLabel').textContent=names[M]+' '+Y;
+  var g=document.getElementById('grid');g.innerHTML='';
+  var first=new Date(Y,M,1).getDay();
+  var dim=new Date(Y,M+1,0).getDate();
+  var prev=new Date(Y,M,0).getDate();
+  var today=new Date();
+  for(var i=first-1;i>=0;i--){g.appendChild(makeCell(prev-i,Y,M-1,true))}
+  for(var d=1;d<=dim;d++){
+    var isTd=(today.getFullYear()===Y&&today.getMonth()===M&&today.getDate()===d);
+    g.appendChild(makeCell(d,Y,M,false,isTd));
+  }
+  var tot=first+dim,rem=tot%7===0?0:7-(tot%7);
+  for(var d=1;d<=rem;d++){g.appendChild(makeCell(d,Y,M+1,true))}
 }
 
-function render() {
-  const monthNames = ['January','February','March','April','May','June',
-                      'July','August','September','October','November','December'];
-  document.getElementById('monthLabel').textContent = `${monthNames[currentMonth]} ${currentYear}`;
-
-  const grid = document.getElementById('calendarGrid');
-  grid.innerHTML = '';
-
-  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const daysInPrev  = new Date(currentYear, currentMonth, 0).getDate();
-  const today = new Date();
-
-  // prev month filler
-  for (let i = firstDay - 1; i >= 0; i--) {
-    const cell = makeCell(daysInPrev - i, currentYear, currentMonth - 1, true);
-    grid.appendChild(cell);
-  }
-
-  // current month
-  for (let d = 1; d <= daysInMonth; d++) {
-    const isToday = (today.getFullYear() === currentYear &&
-                     today.getMonth() === currentMonth &&
-                     today.getDate() === d);
-    const cell = makeCell(d, currentYear, currentMonth, false, isToday);
-    grid.appendChild(cell);
-  }
-
-  // next month filler
-  const total = firstDay + daysInMonth;
-  const remainder = total % 7 === 0 ? 0 : 7 - (total % 7);
-  for (let d = 1; d <= remainder; d++) {
-    const cell = makeCell(d, currentYear, currentMonth + 1, true);
-    grid.appendChild(cell);
-  }
-}
-
-function pad(n) { return String(n).padStart(2,'0'); }
-
-function makeCell(day, year, month, otherMonth, isToday) {
-  const cell = document.createElement('div');
-  cell.className = 'day-cell' + (otherMonth ? ' other-month' : '') + (isToday ? ' today' : '');
-
-  const numDiv = document.createElement('div');
-  numDiv.className = 'day-num';
-  numDiv.textContent = day;
-  cell.appendChild(numDiv);
-
-  if (!otherMonth) {
-    const actualMonth = ((month % 12) + 12) % 12;
-    const actualYear  = month < 0 ? year - 1 : month > 11 ? year + 1 : year;
-    const dateStr = `${actualYear}-${pad(actualMonth + 1)}-${pad(day)}`;
-    const dayEvents = events.filter(e => e.date === dateStr);
-
-    const MAX_SHOW = 3;
-    dayEvents.slice(0, MAX_SHOW).forEach(ev => {
-      const chip = document.createElement('div');
-      chip.className = `event-chip ${ev.category}`;
-      chip.textContent = ev.title;
-      chip.title = ev.notes || ev.title;
-      chip.onclick = (e) => { e.stopPropagation(); openDetail(ev.id); };
-      cell.appendChild(chip);
+function makeCell(day,year,month,om,isTd){
+  var cell=document.createElement('div');
+  cell.className='dc'+(om?' om':'')+(isTd?' td':'');
+  var dn=document.createElement('div');dn.className='dn';dn.textContent=day;cell.appendChild(dn);
+  if(!om){
+    var am=((month%12)+12)%12;
+    var ay=month<0?year-1:(month>11?year+1:year);
+    var ds=ay+'-'+p2(am+1)+'-'+p2(day);
+    var evs=events.filter(function(e){return e.date===ds});
+    evs.slice(0,3).forEach(function(ev){
+      var c=document.createElement('div');
+      c.className='chip '+ev.category;
+      c.textContent=ev.title;
+      c.title=ev.notes||ev.title;
+      (function(id){c.onclick=function(e){e.stopPropagation();openDetail(id)}})(ev.id);
+      cell.appendChild(c);
     });
-
-    if (dayEvents.length > MAX_SHOW) {
-      const more = document.createElement('div');
-      more.className = 'more-events';
-      more.textContent = `+${dayEvents.length - MAX_SHOW} more`;
-      more.onclick = (e) => { e.stopPropagation(); openAddModalForDate(dateStr); };
+    if(evs.length>3){
+      var more=document.createElement('div');more.className='more';
+      more.textContent='+'+(evs.length-3)+' more';
+      (function(s){more.onclick=function(e){e.stopPropagation();openDayView(s)}})(ds);
       cell.appendChild(more);
     }
-
-    cell.onclick = () => openAddModalForDate(dateStr);
+    (function(s){cell.onclick=function(){openAdd(s)}})(ds);
   }
-
   return cell;
 }
 
-// ── Add / Edit Modal ──────────────────────────────────────────────────────────
-function openAddModal() {
-  editingId = null;
-  document.getElementById('modalTitle').textContent = 'Add Shipment Event';
-  document.getElementById('deleteBtn').style.display = 'none';
-  clearForm();
-  const today = new Date();
-  document.getElementById('eventDate').value = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
-  document.getElementById('eventModal').classList.add('open');
+function openAdd(ds){
+  editId=null;
+  document.getElementById('eTitle').textContent='Add Event';
+  document.getElementById('eDel').style.display='none';
+  document.getElementById('eCat').value='shipment';
+  document.getElementById('eLabel').value='';
+  document.getElementById('eHub').value='';
+  document.getElementById('eQty').value='';
+  document.getElementById('eNotes').value='';
+  if(!ds){var now=new Date();ds=now.getFullYear()+'-'+p2(now.getMonth()+1)+'-'+p2(now.getDate())}
+  document.getElementById('eDate').value=ds;
+  document.getElementById('eModal').classList.add('open');
 }
 
-function openAddModalForDate(dateStr) {
-  editingId = null;
-  document.getElementById('modalTitle').textContent = 'Add Shipment Event';
-  document.getElementById('deleteBtn').style.display = 'none';
-  clearForm();
-  document.getElementById('eventDate').value = dateStr;
-  document.getElementById('eventModal').classList.add('open');
+function openEdit(id){
+  var ev=null;
+  for(var i=0;i<events.length;i++){if(events[i].id===id){ev=events[i];break}}
+  if(!ev)return;
+  editId=id;
+  document.getElementById('eTitle').textContent='Edit Event';
+  document.getElementById('eDel').style.display='block';
+  document.getElementById('eDate').value=ev.date;
+  document.getElementById('eCat').value=ev.category;
+  document.getElementById('eLabel').value=ev.title;
+  document.getElementById('eHub').value=ev.hub||'';
+  document.getElementById('eQty').value=ev.qty||'';
+  document.getElementById('eNotes').value=ev.notes||'';
+  document.getElementById('eModal').classList.add('open');
 }
 
-function openEditModal(id) {
-  const ev = events.find(e => e.id === id);
-  if (!ev) return;
-  editingId = id;
-  document.getElementById('modalTitle').textContent = 'Edit Event';
-  document.getElementById('deleteBtn').style.display = 'block';
-  document.getElementById('eventDate').value     = ev.date;
-  document.getElementById('eventCategory').value = ev.category;
-  document.getElementById('eventTitle').value    = ev.title;
-  document.getElementById('eventHub').value      = ev.hub || '';
-  document.getElementById('eventQty').value      = ev.qty || '';
-  document.getElementById('eventNotes').value    = ev.notes || '';
-  document.getElementById('eventModal').classList.add('open');
-}
+function closeModal(){document.getElementById('eModal').classList.remove('open');editId=null}
 
-function clearForm() {
-  document.getElementById('eventCategory').value = 'shipment';
-  document.getElementById('eventTitle').value    = '';
-  document.getElementById('eventHub').value      = '';
-  document.getElementById('eventQty').value      = '';
-  document.getElementById('eventNotes').value    = '';
-}
-
-function closeModal() {
-  document.getElementById('eventModal').classList.remove('open');
-  editingId = null;
-}
-
-function saveEvent() {
-  const date     = document.getElementById('eventDate').value;
-  const category = document.getElementById('eventCategory').value;
-  const title    = document.getElementById('eventTitle').value.trim();
-  const hub      = document.getElementById('eventHub').value;
-  const qty      = document.getElementById('eventQty').value.trim();
-  const notes    = document.getElementById('eventNotes').value.trim();
-
-  if (!date || !title) { alert('Date and title are required.'); return; }
-
-  if (editingId) {
-    const idx = events.findIndex(e => e.id === editingId);
-    if (idx !== -1) events[idx] = { id: editingId, date, category, title, hub, qty, notes };
-  } else {
-    events.push({ id: uid(), date, category, title, hub, qty, notes });
+function doSave(){
+  var date=document.getElementById('eDate').value;
+  var cat=document.getElementById('eCat').value;
+  var title=document.getElementById('eLabel').value.trim();
+  var hub=document.getElementById('eHub').value;
+  var qty=document.getElementById('eQty').value.trim();
+  var notes=document.getElementById('eNotes').value.trim();
+  if(!date||!title){alert('Date and title required.');return}
+  if(editId){
+    for(var i=0;i<events.length;i++){
+      if(events[i].id===editId){events[i]={id:editId,date:date,category:cat,title:title,hub:hub,qty:qty,notes:notes};break}
+    }
+  }else{
+    events.push({id:uid(),date:date,category:cat,title:title,hub:hub,qty:qty,notes:notes});
   }
-
-  save();
-  closeModal();
-  render();
+  saveData();closeModal();render();
 }
 
-function deleteEvent() {
-  if (!editingId) return;
-  if (!confirm('Delete this event?')) return;
-  events = events.filter(e => e.id !== editingId);
-  save();
-  closeModal();
-  render();
+function doDelete(){
+  if(!editId||!confirm('Delete this event?'))return;
+  events=events.filter(function(e){return e.id!==editId});
+  saveData();closeModal();render();
 }
 
-// ── Detail Modal ──────────────────────────────────────────────────────────────
-function openDetail(id) {
-  const ev = events.find(e => e.id === id);
-  if (!ev) return;
-  detailEventId = id;
-
-  const d = new Date(ev.date + 'T00:00:00');
-  const dateLabel = d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-  const colorMap = { production:'var(--production)', shipment:'var(--shipment)', purchasing:'var(--purchasing)', atrisk:'var(--atrisk)' };
-  const bgMap    = { production:'var(--production-bg)', shipment:'var(--shipment-bg)', purchasing:'var(--purchasing-bg)', atrisk:'var(--atrisk-bg)' };
-
-  document.getElementById('detailContent').innerHTML = `
-    <div class="event-detail">
-      <div class="detail-tag" style="background:${bgMap[ev.category]};color:${colorMap[ev.category]}">
-        ${CAT_ICONS[ev.category]} ${CATEGORY_LABELS[ev.category]}
-      </div>
-      <div style="font-family:sans-serif;font-weight:700;font-size:20px;margin:4px 0 12px">${ev.title}</div>
-      <div class="detail-row"><div class="detail-key">Date</div><div class="detail-val">${dateLabel}</div></div>
-      ${ev.hub ? `<div class="detail-row"><div class="detail-key">Hub</div><div class="detail-val">${ev.hub}</div></div>` : ''}
-      ${ev.qty ? `<div class="detail-row"><div class="detail-key">Qty</div><div class="detail-val">${ev.qty}</div></div>` : ''}
-      ${ev.notes ? `<div class="detail-row"><div class="detail-key">Notes</div><div class="detail-val">${ev.notes}</div></div>` : ''}
-    </div>
-  `;
-
-  document.getElementById('detailModal').classList.add('open');
+function openDetail(id){
+  var ev=null;
+  for(var i=0;i<events.length;i++){if(events[i].id===id){ev=events[i];break}}
+  if(!ev)return;
+  detailId=id;
+  var dt=new Date(ev.date+'T00:00:00');
+  var dl=dt.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  var html='<div class="dd">'+
+    '<div class="dtag" style="background:'+BGS[ev.category]+';color:'+COLORS[ev.category]+'">'+CATS[ev.category]+'</div>'+
+    '<div class="dtitle">'+escH(ev.title)+'</div>'+
+    '<div class="drow"><div class="dkey">Date</div><div>'+dl+'</div></div>'+
+    (ev.hub?'<div class="drow"><div class="dkey">Hub</div><div>'+escH(ev.hub)+'</div></div>':'')+
+    (ev.qty?'<div class="drow"><div class="dkey">Qty</div><div>'+escH(ev.qty)+'</div></div>':'')+
+    (ev.notes?'<div class="drow"><div class="dkey">Notes</div><div>'+escH(ev.notes)+'</div></div>':'')+
+    '</div>';
+  document.getElementById('dContent').innerHTML=html;
+  document.getElementById('dModal').classList.add('open');
 }
 
-function closeDetail() {
-  document.getElementById('detailModal').classList.remove('open');
-  detailEventId = null;
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function closeDetail(){document.getElementById('dModal').classList.remove('open');detailId=null}
+function detailEdit(){var id=detailId;closeDetail();openEdit(id)}
+function detailDelete(){
+  if(!detailId||!confirm('Delete?'))return;
+  events=events.filter(function(e){return e.id!==detailId});
+  saveData();closeDetail();render();
 }
 
-function editFromDetail() {
-  const id = detailEventId;
-  closeDetail();
-  openEditModal(id);
+
+function openDayView(ds){
+  var evs=events.filter(function(e){return e.date===ds});
+  var dt=new Date(ds+'T00:00:00');
+  var dl=dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('dayTitle').textContent=dl;
+  document.getElementById('daySubtitle').textContent=evs.length+' event'+(evs.length!==1?'s':'')+' on this day';
+  var list=document.getElementById('dayList');
+  list.innerHTML='';
+  evs.forEach(function(ev){
+    var item=document.createElement('div');
+    item.className='dev-item';
+    item.innerHTML=
+      '<div class="dev-left">'+
+        '<div class="dev-title">'+escH(ev.title)+'</div>'+
+        '<div class="dev-meta">'+
+          '<span class="dev-tag" style="background:'+BGS[ev.category]+';color:'+COLORS[ev.category]+'">'+CATS[ev.category]+'</span>'+
+          (ev.hub?'<span class="dev-hub">'+escH(ev.hub)+'</span>':'')+
+          (ev.qty?'<span class="dev-hub">'+escH(ev.qty)+'</span>':'')+
+        '</div>'+
+        (ev.notes?'<div class="dev-notes">'+escH(ev.notes)+'</div>':'')+
+      '</div>'+
+      '<div class="dev-arrow">&#8250;</div>';
+    (function(id){item.onclick=function(){closeDayView();openDetail(id)}})(ev.id);
+    list.appendChild(item);
+  });
+  document.getElementById('dayAddBtn').onclick=function(){closeDayView();openAdd(ds)};
+  document.getElementById('dayModal').classList.add('open');
 }
 
-function deleteFromDetail() {
-  if (!detailEventId) return;
-  if (!confirm('Delete this event?')) return;
-  events = events.filter(e => e.id !== detailEventId);
-  save();
-  closeDetail();
-  render();
-}
+function closeDayView(){document.getElementById('dayModal').classList.remove('open')}
 
-// close modals on overlay click
-document.getElementById('eventModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-document.getElementById('detailModal').addEventListener('click', function(e) {
-  if (e.target === this) closeDetail();
-});
+document.getElementById('dayModal').addEventListener('click',function(e){if(e.target===this)closeDayView()});
+
+document.getElementById('eModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.getElementById('dModal').addEventListener('click',function(e){if(e.target===this)closeDetail()});
 
 init();
 </script>
