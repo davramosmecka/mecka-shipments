@@ -17,6 +17,10 @@ button{cursor:pointer;font-family:inherit}
 #monthLabel{font-weight:700;font-size:15px;min-width:150px;text-align:center}
 .abtn{background:#4f6ef7;border:none;color:#fff;padding:7px 16px;border-radius:7px;font-weight:600;font-size:13px}
 .abtn:hover{opacity:.85}
+.sync-status{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600}
+.sync-ok{background:rgba(34,211,165,.13);color:#22d3a5}
+.sync-err{background:rgba(244,63,94,.13);color:#f43f5e}
+.sync-load{background:rgba(79,110,247,.13);color:#4f6ef7}
 .legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 20px;background:#181c27;border-bottom:1px solid #2a2f45}
 .li{display:flex;align-items:center;gap:5px;font-size:12px;color:#6b7194}
 .ld{width:9px;height:9px;border-radius:50%}
@@ -36,8 +40,8 @@ button{cursor:pointer;font-family:inherit}
 .chip.shipment{background:rgba(34,211,165,.13);color:#22d3a5;border-color:#22d3a5}
 .chip.purchasing{background:rgba(167,139,250,.13);color:#a78bfa;border-color:#a78bfa}
 .chip.atrisk{background:rgba(244,63,94,.13);color:#f43f5e;border-color:#f43f5e}
-.more{font-size:10px;color:#6b7194;padding:1px 3px}
-.more:hover{color:#4f6ef7}
+.more{font-size:10px;color:#4f6ef7;padding:1px 3px;font-weight:600}
+.more:hover{opacity:.75}
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:center;justify-content:center;padding:16px}
 .ov.open{display:flex}
 .modal{background:#181c27;border:1px solid #2a2f45;border-radius:14px;padding:24px;width:100%;max-width:440px;position:relative}
@@ -56,29 +60,33 @@ textarea{resize:vertical;min-height:65px}
 .bcn:hover{color:#e8eaf2}
 .bsv{background:#4f6ef7;border:none;color:#fff;padding:8px 20px;border-radius:7px;font-weight:600;font-size:13px}
 .bsv:hover{opacity:.85}
+.bsv:disabled{opacity:.4;cursor:not-allowed}
 .bdl{background:rgba(244,63,94,.13);border:1px solid #f43f5e;color:#f43f5e;padding:8px 14px;border-radius:7px;font-size:13px;margin-right:auto}
 .bdl:hover{opacity:.8}
+/* Day view */
+.daymodal{background:#181c27;border:1px solid #2a2f45;border-radius:14px;padding:24px;width:100%;max-width:500px;position:relative;max-height:82vh;display:flex;flex-direction:column}
+.daymodal h2{font-size:15px;font-weight:700;margin-bottom:3px}
+.dsub{font-size:11px;color:#6b7194;margin-bottom:14px}
+.dev-list{overflow-y:auto;display:flex;flex-direction:column;gap:7px;flex:1}
+.dev-item{background:#0f1117;border:1px solid #2a2f45;border-radius:9px;padding:11px 13px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer;transition:border-color .15s}
+.dev-item:hover{border-color:#4f6ef7}
+.dev-left{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.dev-title{font-weight:700;font-size:14px}
+.dev-meta{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.dev-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.dev-pill{font-size:10px;color:#6b7194;background:#1e2335;padding:2px 7px;border-radius:10px}
+.dev-notes{font-size:11px;color:#6b7194;margin-top:2px}
+.dev-arrow{color:#4f6ef7;font-size:16px;padding-top:1px}
+.day-add-btn{margin-top:12px;background:#4f6ef7;border:none;color:#fff;padding:9px 16px;border-radius:7px;font-weight:600;font-size:13px;width:100%}
+.day-add-btn:hover{opacity:.85}
+/* Detail modal */
 .dd{display:flex;flex-direction:column;gap:9px}
 .dtag{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 9px;border-radius:20px}
 .drow{display:flex;gap:7px;font-size:13px}
 .dkey{color:#6b7194;font-size:11px;min-width:75px;padding-top:1px}
 .dtitle{font-weight:700;font-size:19px;margin:4px 0 10px}
-/* Day view modal */
-.daymodal{background:#181c27;border:1px solid #2a2f45;border-radius:14px;padding:24px;width:100%;max-width:500px;position:relative;max-height:80vh;display:flex;flex-direction:column}
-.daymodal h2{font-size:15px;font-weight:700;margin-bottom:4px}
-.daymodal .dsub{font-size:11px;color:#6b7194;margin-bottom:16px}
-.dev-list{overflow-y:auto;display:flex;flex-direction:column;gap:8px;flex:1}
-.dev-item{background:#0f1117;border:1px solid #2a2f45;border-radius:9px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer;transition:border-color .15s}
-.dev-item:hover{border-color:#4f6ef7}
-.dev-left{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
-.dev-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dev-meta{display:flex;gap:8px;flex-wrap:wrap}
-.dev-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
-.dev-hub{font-size:10px;color:#6b7194}
-.dev-notes{font-size:11px;color:#6b7194;margin-top:3px}
-.dev-arrow{color:#6b7194;font-size:14px;padding-top:2px}
-.day-add-btn{margin-top:14px;background:#4f6ef7;border:none;color:#fff;padding:8px 16px;border-radius:7px;font-weight:600;font-size:13px;width:100%}
-.day-add-btn:hover{opacity:.85}
+/* Loading overlay */
+.loading-bar{position:fixed;top:0;left:0;height:2px;background:#4f6ef7;z-index:999;transition:width .3s;width:0}
 @media(max-width:600px){
   .wrap{padding:10px}
   .dc{min-height:65px;padding:4px}
@@ -89,9 +97,12 @@ textarea{resize:vertical;min-height:65px}
 </head>
 <body>
 
+<div class="loading-bar" id="loadingBar"></div>
+
 <header>
   <div class="logo">MECKA <small>// shipment calendar</small></div>
   <div class="hc">
+    <span class="sync-status sync-load" id="syncStatus">connecting...</span>
     <button class="nbtn" onclick="changeMonth(-1)">&#8249;</button>
     <div id="monthLabel"></div>
     <button class="nbtn" onclick="changeMonth(1)">&#8250;</button>
@@ -113,7 +124,6 @@ textarea{resize:vertical;min-height:65px}
   </div>
   <div id="grid"></div>
 </div>
-
 
 <!-- Day View Modal -->
 <div class="ov" id="dayModal">
@@ -174,7 +184,7 @@ textarea{resize:vertical;min-height:65px}
     <div class="ma">
       <button class="bdl" id="eDel" style="display:none" onclick="doDelete()">Delete</button>
       <button class="bcn" onclick="closeModal()">Cancel</button>
-      <button class="bsv" onclick="doSave()">Save</button>
+      <button class="bsv" id="eSave" onclick="doSave()">Save</button>
     </div>
   </div>
 </div>
@@ -193,43 +203,108 @@ textarea{resize:vertical;min-height:65px}
 </div>
 
 <script>
+// ── CONFIG — paste your Apps Script deployment URL below ──────────────────
+var API = 'https://script.google.com/macros/s/AKfycbyVjXKDSdkx-cyk6W7OLOuUbUAhQKKH6oAI5dl2imI2fsdLj5LjJ6IztVEXI5keRHAe/exec';
+// ─────────────────────────────────────────────────────────────────────────────
+
 var Y, M, events=[], editId=null, detailId=null;
 var CATS={production:'Production',shipment:'Shipment / Arrival',purchasing:'Purchasing / PO',atrisk:'At Risk / Delayed'};
-var ICONS={production:'&#9881;',shipment:'&#128230;',purchasing:'&#129534;',atrisk:'&#9888;'};
 var COLORS={production:'#f97316',shipment:'#22d3a5',purchasing:'#a78bfa',atrisk:'#f43f5e'};
 var BGS={production:'rgba(249,115,22,.13)',shipment:'rgba(34,211,165,.13)',purchasing:'rgba(167,139,250,.13)',atrisk:'rgba(244,63,94,.13)'};
 
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function p2(n){return String(n).padStart(2,'0')}
+function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-function saveData(){try{localStorage.setItem('mck2',JSON.stringify(events))}catch(e){}}
-function loadData(){
-  try{var d=localStorage.getItem('mck2');if(d){events=JSON.parse(d);return}}catch(e){}
-  seed();
+function setSync(state, msg){
+  var el=document.getElementById('syncStatus');
+  el.textContent=msg;
+  el.className='sync-status '+(state==='ok'?'sync-ok':state==='err'?'sync-err':'sync-load');
 }
 
-function seed(){
-  var now=new Date(),y=now.getFullYear(),m=now.getMonth()+1;
-  function dt(d){return y+'-'+p2(m)+'-'+p2(d)}
-  events=[
-    {id:uid(),date:dt(1),category:'shipment',title:'100 MC JKT',hub:'JKT',qty:'100 units',notes:'First Jakarta batch.'},
-    {id:uid(),date:dt(1),category:'shipment',title:'1000 SD PH',hub:'MNL',qty:'1000 units',notes:''},
-    {id:uid(),date:dt(2),category:'shipment',title:'300 SD JKT',hub:'JKT',qty:'300 units',notes:''},
-    {id:uid(),date:dt(5),category:'production',title:'1000 Gohan',hub:'',qty:'1000 units',notes:'Batch ready from Brian.'},
-    {id:uid(),date:dt(6),category:'shipment',title:'100 MC JKT',hub:'JKT',qty:'100 units',notes:''},
-    {id:uid(),date:dt(6),category:'shipment',title:'100 MC MNL',hub:'MNL',qty:'100 units',notes:''},
-    {id:uid(),date:dt(7),category:'purchasing',title:'1000 CM5',hub:'',qty:'1000 units',notes:'PO with Julia / Armita.'},
-    {id:uid(),date:dt(10),category:'shipment',title:'100 MC JKT',hub:'JKT',qty:'100 units',notes:''},
-    {id:uid(),date:dt(10),category:'shipment',title:'100 MC MNL',hub:'MNL',qty:'100 units',notes:''},
-    {id:uid(),date:dt(13),category:'atrisk',title:'100 WC to ?',hub:'',qty:'100 sets',notes:'Wrist-cam destination TBD. QC backlog.'},
-    {id:uid(),date:dt(19),category:'production',title:'1000 Naruto',hub:'',qty:'1000 units',notes:'Naruto batch ready.'}
-  ];
-  saveData();
+function setLoading(on){
+  document.getElementById('loadingBar').style.width=on?'70%':'0';
 }
 
+// ── API calls ─────────────────────────────────────────────────────────────
+function apiGet(cb){
+  setLoading(true);
+  setSync('load','syncing...');
+  var url=API+'?action=get&_='+Date.now();
+  fetch(url)
+    .then(function(r){return r.json()})
+    .then(function(data){
+      setLoading(false);
+      if(data.events){
+        events=data.events;
+        // cache locally as fallback
+        try{localStorage.setItem('mck_cache',JSON.stringify(events))}catch(e){}
+        setSync('ok','live ✓');
+        cb && cb();
+      } else {
+        throw new Error(data.error||'bad response');
+      }
+    })
+    .catch(function(err){
+      setLoading(false);
+      setSync('err','offline');
+      // fallback to cache
+      try{
+        var c=localStorage.getItem('mck_cache');
+        if(c){events=JSON.parse(c)}
+      }catch(e){}
+      cb && cb();
+    });
+}
+
+function apiSave(ev, cb){
+  setLoading(true);
+  var url=API+'?action=save&event='+encodeURIComponent(JSON.stringify(ev));
+  fetch(url)
+    .then(function(r){return r.json()})
+    .then(function(data){
+      setLoading(false);
+      if(data.ok){
+        setSync('ok','saved ✓');
+        setTimeout(function(){setSync('ok','live ✓')},2000);
+        cb && cb(true);
+      } else {
+        throw new Error(data.error||'save failed');
+      }
+    })
+    .catch(function(){
+      setLoading(false);
+      setSync('err','save failed');
+      cb && cb(false);
+    });
+}
+
+function apiDelete(id, cb){
+  setLoading(true);
+  var url=API+'?action=delete&id='+encodeURIComponent(id);
+  fetch(url)
+    .then(function(r){return r.json()})
+    .then(function(data){
+      setLoading(false);
+      if(data.ok){
+        setSync('ok','deleted ✓');
+        setTimeout(function(){setSync('ok','live ✓')},2000);
+        cb && cb(true);
+      } else {
+        throw new Error(data.error);
+      }
+    })
+    .catch(function(){
+      setLoading(false);
+      setSync('err','delete failed');
+      cb && cb(false);
+    });
+}
+
+// ── Init & render ─────────────────────────────────────────────────────────
 function init(){
   var now=new Date();Y=now.getFullYear();M=now.getMonth();
-  loadData();render();
+  apiGet(function(){render()});
 }
 
 function changeMonth(d){
@@ -279,11 +354,41 @@ function makeCell(day,year,month,om,isTd){
       (function(s){more.onclick=function(e){e.stopPropagation();openDayView(s)}})(ds);
       cell.appendChild(more);
     }
-    (function(s){cell.onclick=function(){openAdd(s)}})(ds);
+    (function(s,cnt){cell.onclick=function(){cnt>0?openDayView(s):openAdd(s)}})(ds,evs.length);
   }
   return cell;
 }
 
+// ── Day view ──────────────────────────────────────────────────────────────
+function openDayView(ds){
+  var evs=events.filter(function(e){return e.date===ds});
+  var dt=new Date(ds+'T00:00:00');
+  var dl=dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('dayTitle').textContent=dl;
+  document.getElementById('daySubtitle').textContent=evs.length+' event'+(evs.length!==1?'s':'')+' on this day';
+  var list=document.getElementById('dayList');list.innerHTML='';
+  evs.forEach(function(ev){
+    var item=document.createElement('div');item.className='dev-item';
+    item.innerHTML=
+      '<div class="dev-left">'+
+        '<div class="dev-title">'+escH(ev.title)+'</div>'+
+        '<div class="dev-meta">'+
+          '<span class="dev-tag" style="background:'+BGS[ev.category]+';color:'+COLORS[ev.category]+'">'+CATS[ev.category]+'</span>'+
+          (ev.hub?'<span class="dev-pill">'+escH(ev.hub)+'</span>':'')+
+          (ev.qty?'<span class="dev-pill">'+escH(ev.qty)+'</span>':'')+
+        '</div>'+
+        (ev.notes?'<div class="dev-notes">'+escH(ev.notes)+'</div>':'')+
+      '</div>'+
+      '<div class="dev-arrow">&#8250;</div>';
+    (function(id){item.onclick=function(){closeDayView();openDetail(id)}})(ev.id);
+    list.appendChild(item);
+  });
+  document.getElementById('dayAddBtn').onclick=function(){closeDayView();openAdd(ds)};
+  document.getElementById('dayModal').classList.add('open');
+}
+function closeDayView(){document.getElementById('dayModal').classList.remove('open')}
+
+// ── Add/Edit modal ────────────────────────────────────────────────────────
 function openAdd(ds){
   editId=null;
   document.getElementById('eTitle').textContent='Add Event';
@@ -324,22 +429,27 @@ function doSave(){
   var qty=document.getElementById('eQty').value.trim();
   var notes=document.getElementById('eNotes').value.trim();
   if(!date||!title){alert('Date and title required.');return}
+  var ev={id:editId||uid(),date:date,category:cat,title:title,hub:hub,qty:qty,notes:notes};
+  // Optimistic update
   if(editId){
-    for(var i=0;i<events.length;i++){
-      if(events[i].id===editId){events[i]={id:editId,date:date,category:cat,title:title,hub:hub,qty:qty,notes:notes};break}
-    }
-  }else{
-    events.push({id:uid(),date:date,category:cat,title:title,hub:hub,qty:qty,notes:notes});
+    for(var i=0;i<events.length;i++){if(events[i].id===editId){events[i]=ev;break}}
+  } else {
+    events.push(ev);
   }
-  saveData();closeModal();render();
+  closeModal();render();
+  // Persist to sheet
+  apiSave(ev, function(ok){if(!ok){alert('Saved locally but failed to sync to sheet. Check your connection.')}});
 }
 
 function doDelete(){
   if(!editId||!confirm('Delete this event?'))return;
-  events=events.filter(function(e){return e.id!==editId});
-  saveData();closeModal();render();
+  var id=editId;
+  events=events.filter(function(e){return e.id!==id});
+  closeModal();render();
+  apiDelete(id, function(ok){if(!ok){alert('Deleted locally but failed to sync to sheet.')}});
 }
 
+// ── Detail modal ──────────────────────────────────────────────────────────
 function openDetail(id){
   var ev=null;
   for(var i=0;i<events.length;i++){if(events[i].id===id){ev=events[i];break}}
@@ -347,7 +457,8 @@ function openDetail(id){
   detailId=id;
   var dt=new Date(ev.date+'T00:00:00');
   var dl=dt.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  var html='<div class="dd">'+
+  document.getElementById('dContent').innerHTML=
+    '<div class="dd">'+
     '<div class="dtag" style="background:'+BGS[ev.category]+';color:'+COLORS[ev.category]+'">'+CATS[ev.category]+'</div>'+
     '<div class="dtitle">'+escH(ev.title)+'</div>'+
     '<div class="drow"><div class="dkey">Date</div><div>'+dl+'</div></div>'+
@@ -355,53 +466,19 @@ function openDetail(id){
     (ev.qty?'<div class="drow"><div class="dkey">Qty</div><div>'+escH(ev.qty)+'</div></div>':'')+
     (ev.notes?'<div class="drow"><div class="dkey">Notes</div><div>'+escH(ev.notes)+'</div></div>':'')+
     '</div>';
-  document.getElementById('dContent').innerHTML=html;
   document.getElementById('dModal').classList.add('open');
 }
-
-function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function closeDetail(){document.getElementById('dModal').classList.remove('open');detailId=null}
 function detailEdit(){var id=detailId;closeDetail();openEdit(id)}
 function detailDelete(){
   if(!detailId||!confirm('Delete?'))return;
-  events=events.filter(function(e){return e.id!==detailId});
-  saveData();closeDetail();render();
+  var id=detailId;
+  events=events.filter(function(e){return e.id!==id});
+  closeDetail();render();
+  apiDelete(id,function(){});
 }
-
-
-function openDayView(ds){
-  var evs=events.filter(function(e){return e.date===ds});
-  var dt=new Date(ds+'T00:00:00');
-  var dl=dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  document.getElementById('dayTitle').textContent=dl;
-  document.getElementById('daySubtitle').textContent=evs.length+' event'+(evs.length!==1?'s':'')+' on this day';
-  var list=document.getElementById('dayList');
-  list.innerHTML='';
-  evs.forEach(function(ev){
-    var item=document.createElement('div');
-    item.className='dev-item';
-    item.innerHTML=
-      '<div class="dev-left">'+
-        '<div class="dev-title">'+escH(ev.title)+'</div>'+
-        '<div class="dev-meta">'+
-          '<span class="dev-tag" style="background:'+BGS[ev.category]+';color:'+COLORS[ev.category]+'">'+CATS[ev.category]+'</span>'+
-          (ev.hub?'<span class="dev-hub">'+escH(ev.hub)+'</span>':'')+
-          (ev.qty?'<span class="dev-hub">'+escH(ev.qty)+'</span>':'')+
-        '</div>'+
-        (ev.notes?'<div class="dev-notes">'+escH(ev.notes)+'</div>':'')+
-      '</div>'+
-      '<div class="dev-arrow">&#8250;</div>';
-    (function(id){item.onclick=function(){closeDayView();openDetail(id)}})(ev.id);
-    list.appendChild(item);
-  });
-  document.getElementById('dayAddBtn').onclick=function(){closeDayView();openAdd(ds)};
-  document.getElementById('dayModal').classList.add('open');
-}
-
-function closeDayView(){document.getElementById('dayModal').classList.remove('open')}
 
 document.getElementById('dayModal').addEventListener('click',function(e){if(e.target===this)closeDayView()});
-
 document.getElementById('eModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 document.getElementById('dModal').addEventListener('click',function(e){if(e.target===this)closeDetail()});
 
