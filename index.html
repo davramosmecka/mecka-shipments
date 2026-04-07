@@ -111,7 +111,7 @@ textarea{resize:vertical;min-height:65px}
 </header>
 
 <div class="legend">
-  <div class="li"><div class="ld" style="background:#f97316"></div>Production</div>
+  <div class="li"><div class="ld" style="background:#f97316"></div>Ready for Shipment</div>
   <div class="li"><div class="ld" style="background:#22d3a5"></div>Shipment / Arrival</div>
   <div class="li"><div class="ld" style="background:#a78bfa"></div>Purchasing / PO</div>
   <div class="li"><div class="ld" style="background:#f43f5e"></div>At Risk / Delayed</div>
@@ -150,7 +150,7 @@ textarea{resize:vertical;min-height:65px}
         <label class="fl">Category</label>
         <select id="eCat">
           <option value="shipment">Shipment / Arrival</option>
-          <option value="production">Production</option>
+          <option value="production">Ready for Shipment</option>
           <option value="purchasing">Purchasing / PO</option>
           <option value="atrisk">At Risk / Delayed</option>
         </select>
@@ -208,7 +208,7 @@ var API = 'https://script.google.com/macros/s/AKfycbyVjXKDSdkx-cyk6W7OLOuUbUAhQK
 // ─────────────────────────────────────────────────────────────────────────────
 
 var Y, M, events=[], editId=null, detailId=null;
-var CATS={production:'Production',shipment:'Shipment / Arrival',purchasing:'Purchasing / PO',atrisk:'At Risk / Delayed'};
+var CATS={production:'Ready for Shipment',shipment:'Shipment / Arrival',purchasing:'Purchasing / PO',atrisk:'At Risk / Delayed'};
 var COLORS={production:'#f97316',shipment:'#22d3a5',purchasing:'#a78bfa',atrisk:'#f43f5e'};
 var BGS={production:'rgba(249,115,22,.13)',shipment:'rgba(34,211,165,.13)',purchasing:'rgba(167,139,250,.13)',atrisk:'rgba(244,63,94,.13)'};
 
@@ -302,9 +302,43 @@ function apiDelete(id, cb){
 }
 
 // ── Init & render ─────────────────────────────────────────────────────────
+function getSeedEvents(){
+  var y=2025,m='04';
+  function dt(d){return y+'-'+m+'-'+(d<10?'0'+d:String(d))}
+  return [
+    {id:uid(),date:dt(5), category:'production', title:'1000 Gohan',        hub:'',    qty:'1000 units', notes:''},
+    {id:uid(),date:dt(6), category:'shipment',   title:'100 MC JKT',        hub:'JKT', qty:'100 units',  notes:''},
+    {id:uid(),date:dt(7), category:'shipment',   title:'300 MC MNL',        hub:'MNL', qty:'300 units',  notes:''},
+    {id:uid(),date:dt(7), category:'purchasing',  title:'1000 CM5',          hub:'',    qty:'1000 units', notes:'PO with Julia / Armita.'},
+    {id:uid(),date:dt(8), category:'shipment',   title:'100 MC JKT',        hub:'JKT', qty:'100 units',  notes:''},
+    {id:uid(),date:dt(8), category:'shipment',   title:'300 SD 256 JKT',    hub:'JKT', qty:'300 units',  notes:''},
+    {id:uid(),date:dt(8), category:'shipment',   title:'700 Power Banks JKT',hub:'JKT',qty:'700 units',  notes:''},
+    {id:uid(),date:dt(9), category:'shipment',   title:'550 SD Card JKT',   hub:'JKT', qty:'550 units',  notes:''},
+    {id:uid(),date:dt(10),category:'shipment',   title:'100 MC JKT',        hub:'JKT', qty:'100 units',  notes:''},
+    {id:uid(),date:dt(10),category:'shipment',   title:'100 MC MNL',        hub:'MNL', qty:'100 units',  notes:''},
+    {id:uid(),date:dt(10),category:'shipment',   title:'100 MC HCM',        hub:'HCM', qty:'100 units',  notes:''},
+    {id:uid(),date:dt(13),category:'atrisk',     title:'100 WC to ?',       hub:'',    qty:'100 sets',   notes:'Wrist-cam destination TBD. QC backlog.'},
+    {id:uid(),date:dt(19),category:'production', title:'1000 Naruto',        hub:'',    qty:'1000 units', notes:''}
+  ];
+}
+
 function init(){
   var now=new Date();Y=now.getFullYear();M=now.getMonth();
-  apiGet(function(){render()});
+  apiGet(function(){
+    if(events.length===0){
+      var seeds=getSeedEvents();
+      seeds.forEach(function(ev){events.push(ev)});
+      render();
+      var i=0;
+      function pushNext(){
+        if(i>=seeds.length)return;
+        apiSave(seeds[i],function(){i++;pushNext()});
+      }
+      pushNext();
+    } else {
+      render();
+    }
+  });
 }
 
 function changeMonth(d){
